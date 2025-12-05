@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import BookCard from "./BookCard";
+import BookCard from "../components/BookCard";
 
 export default function Books() {
   const [books, setBooks] = useState([]);
