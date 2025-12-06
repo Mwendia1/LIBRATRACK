@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
 
-# MEMBER
+
 class MemberBase(BaseModel):
     name: str = Field(..., example="Alice")
     email: Optional[str] = Field(None, example="alice@example.com")
@@ -22,7 +22,7 @@ class MemberOut(MemberBase):
     class Config:
         orm_mode = True
 
-# BOOK
+
 class BookBase(BaseModel):
     title: str = Field(..., example="The Hobbit")
     author: Optional[str] = Field(None, example="J. R. R. Tolkien")
@@ -53,7 +53,7 @@ class BookOut(BookBase):
     class Config:
         orm_mode = True
 
-# BORROW
+
 class BorrowBase(BaseModel):
     member_id: int
     book_id: int

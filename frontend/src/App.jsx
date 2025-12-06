@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Books from "./pages/Books";
 import Members from "./pages/Members";
 import Borrow from "./pages/Borrow";
-import Register from "./pages/Register";
+import Register from "./pages/register";
 
 function App() {
   return (

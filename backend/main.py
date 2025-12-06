@@ -1,4 +1,4 @@
-# main.py
+
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,18 +20,17 @@ app = FastAPI(title="LibraTrack API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # during development; restrict in prod
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Health
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
-# ---------- BOOKS ----------
 @app.get("/books", response_model=List[BookOut])
 def read_books(skip: int = 0, limit: int = 200, db: Session = Depends(get_db)):
     return db.query(Book).offset(skip).limit(limit).all()
@@ -72,7 +71,6 @@ def delete_book(book_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": f"Book {book_id} deleted"}
 
-# Like a book
 @app.patch("/books/{book_id}/like")
 def like_book(book_id: int, db: Session = Depends(get_db)):
     book = db.query(Book).filter(Book.id == book_id).first()
@@ -82,7 +80,7 @@ def like_book(book_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"likes": book.likes}
 
-# Rate a book (value 1-5)
+
 @app.patch("/books/{book_id}/rate/{value}")
 def rate_book(book_id: int, value: int, db: Session = Depends(get_db)):
     if value < 1 or value > 5:
@@ -108,16 +106,16 @@ def toggle_favorite(book_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"is_favorite": book.is_favorite}
 
-# Suggestions - simplest: top liked or highest rated
+
 @app.get("/suggestions", response_model=List[BookOut])
 def suggestions(limit: int = 5, db: Session = Depends(get_db)):
-    # Try by likes then rating as simple heuristic
+
     by_likes = db.query(Book).order_by(Book.likes.desc()).limit(limit).all()
     if by_likes:
         return by_likes
     return db.query(Book).order_by(Book.rating.desc()).limit(limit).all()
 
-# ---------- MEMBERS ----------
+
 @app.get("/members", response_model=List[MemberOut])
 def read_members(skip: int = 0, limit: int = 200, db: Session = Depends(get_db)):
     return db.query(Member).offset(skip).limit(limit).all()
@@ -162,7 +160,7 @@ def delete_member(member_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": f"Member {member_id} deleted"}
 
-# ---------- BORROW ----------
+
 @app.post("/borrow", response_model=BorrowOut, status_code=status.HTTP_201_CREATED)
 def borrow_book(borrow_in: BorrowCreate, db: Session = Depends(get_db)):
     member = db.query(Member).filter(Member.id == borrow_in.member_id).first()

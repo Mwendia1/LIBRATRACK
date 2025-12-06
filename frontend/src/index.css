@@ -2,12 +2,14 @@ body {
   font-family: Inter, system-ui, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f7f8fb;
-  color: #111827;
+  background: #05070a;
+  color: #19acd1;
 }
 nav a {
   text-decoration: none;
   color: inherit;
 }
 button { cursor: pointer; }
-input, select { padding: 8px; margin: 6px 0; }
+input, select { padding: 8px; margin: 6px 0; 
+background-color: #dac8f0;
+}

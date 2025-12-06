@@ -19,10 +19,10 @@ class Book(Base):
     author = Column(String, nullable=True)
     published_year = Column(Integer, nullable=True)
     cover_id = Column(Integer, nullable=True)
-    copies = Column(Integer, default=1)         # number of available copies
+    copies = Column(Integer, default=1)        
     likes = Column(Integer, default=0)
-    rating = Column(Float, default=0.0)        # average rating
-    rating_count = Column(Integer, default=0)  # number of ratings aggregated
+    rating = Column(Float, default=0.0)        
+    rating_count = Column(Integer, default=0)  
     is_favorite = Column(Boolean, default=False)
 
     borrows = relationship("Borrow", back_populates="book", cascade="all, delete-orphan")

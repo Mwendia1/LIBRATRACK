@@ -7,8 +7,9 @@ const BACKEND = "http://127.0.0.1:8000";
 
 function Books() {
   const [query, setQuery] = useState("the hobbit");
-  const [remoteBooks, setRemoteBooks] = useState([]); // from OpenLibrary
-  const [savedBooks, setSavedBooks] = useState([]);   // from backend
+  const [remoteBooks, setRemoteBooks] = useState([]); 
+
+  const [savedBooks, setSavedBooks] = useState([]);   
 
   useEffect(() => {
     fetchSaved();
@@ -54,6 +55,7 @@ function Books() {
       rating: 0,
       rating_count: 0,
       is_favorite: false
+      
     };
     fetch(`${BACKEND}/books`, {
       method: "POST",
@@ -65,7 +67,7 @@ function Books() {
       .catch(console.error);
   }
 
-  // actions forwarded from BookCard
+  
   function like(id) {
     fetch(`${BACKEND}/books/${id}/like`, { method: "PATCH" }).then(fetchSaved).catch(console.error);
   }
@@ -77,7 +79,8 @@ function Books() {
   }
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: 20, 
+     }}>
       <h2>Books</h2>
 
       <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
@@ -117,3 +120,4 @@ function Books() {
 }
 
 export default Books;
+
