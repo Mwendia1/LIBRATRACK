@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
-const BACKEND = "http://localhost:8000/api";  // CHANGED
+const BACKEND = "http://localhost:8000";
 
 export default function Borrow() {
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [members, setMembers] = useState([]);
   const [books, setBooks] = useState([]);
   const [memberId, setMemberId] = useState("");
@@ -13,44 +13,38 @@ export default function Borrow() {
   const [selectedBook, setSelectedBook] = useState(null);
 
   useEffect(() => {
-    // Check if book was passed from Books page
-    const state = location.state;
-    if (state?.book) {
-      setSelectedBook(state.book);
-      setBookId(state.book.id);
+    const bookParam = searchParams.get("book");
+    if (bookParam) {
+      setBookId(bookParam);
+      fetchBookDetails(bookParam);
     }
 
     fetchMembers();
     fetchAvailableBooks();
-  }, [location]);
+  }, [searchParams]);
+
+  const fetchBookDetails = (bookId) => {
+    fetch(`${BACKEND}/api/books/${bookId}`)
+      .then(r => r.json())
+      .then(data => setSelectedBook(data))
+      .catch(console.error);
+  };
 
   const fetchMembers = () => {
-    fetch(`${BACKEND}/members`)
-      .then(r => {
-        if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
-        return r.json();
-      })
+    fetch(`${BACKEND}/api/members`)
+      .then(r => r.json())
       .then(setMembers)
-      .catch(error => {
-        console.error("Error fetching members:", error);
-        alert("Failed to fetch members. Make sure backend is running.");
-      });
+      .catch(console.error);
   };
 
   const fetchAvailableBooks = () => {
-    fetch(`${BACKEND}/books`)
-      .then(r => {
-        if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
-        return r.json();
-      })
+    fetch(`${BACKEND}/api/books`)
+      .then(r => r.json())
       .then(data => {
         const availableBooks = data.filter(book => book.available_copies > 0);
         setBooks(availableBooks);
       })
-      .catch(error => {
-        console.error("Error fetching books:", error);
-        alert("Failed to fetch books.");
-      });
+      .catch(console.error);
   };
 
   const handleBorrow = async (e) => {
@@ -62,7 +56,7 @@ export default function Borrow() {
 
     setLoading(true);
     try {
-      const response = await fetch(`${BACKEND}/borrow`, {
+      const response = await fetch(`${BACKEND}/api/borrow`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -79,12 +73,10 @@ export default function Borrow() {
       const result = await response.json();
       alert(`Book borrowed successfully! Due date: ${new Date(result.due_date).toLocaleDateString()}`);
       
-      // Reset form
       setMemberId("");
       setBookId("");
       setSelectedBook(null);
       
-      // Refresh available books
       fetchAvailableBooks();
     } catch (error) {
       alert(error.message);
@@ -99,18 +91,8 @@ export default function Borrow() {
 
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow p-6">
-          {selectedBook && (
-            <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h3 className="font-medium text-blue-800 mb-2">Pre-selected Book</h3>
-              <p className="text-blue-700">
-                <span className="font-semibold">{selectedBook.title}</span> by {selectedBook.author}
-              </p>
-            </div>
-          )}
-
           <form onSubmit={handleBorrow}>
             <div className="space-y-6">
-              {/* Member Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Select Member *
@@ -130,7 +112,6 @@ export default function Borrow() {
                 </select>
               </div>
 
-              {/* Book Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Select Book *
@@ -150,18 +131,13 @@ export default function Borrow() {
                     <option 
                       key={book.id} 
                       value={book.id}
-                      disabled={book.available_copies === 0}
                     >
-                      {book.title} by {book.author} 
-                      {book.available_copies > 0 
-                        ? ` (${book.available_copies} available)` 
-                        : ' (Out of stock)'}
+                      {book.title} by {book.author} ({book.available_copies} available)
                     </option>
                   ))}
                 </select>
               </div>
 
-              {/* Book Details (if selected) */}
               {selectedBook && (
                 <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
                   <h4 className="font-medium text-gray-800 mb-2">Selected Book Details</h4>
@@ -186,7 +162,6 @@ export default function Borrow() {
                 </div>
               )}
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading || !memberId || !bookId}
@@ -205,7 +180,6 @@ export default function Borrow() {
           </form>
         </div>
 
-        {/* Available Books List */}
         <div className="mt-8">
           <h3 className="text-xl font-semibold text-gray-800 mb-4">Available Books</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

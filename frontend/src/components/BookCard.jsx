@@ -1,10 +1,9 @@
 import { useState } from "react";
 
-export default function BookCard({ book, remote, onSave, onLike, onToggleFavorite, onRate, savedBooks }) {
+export default function BookCard({ book, remote=false, onSave, onLike, onToggleFavorite, onRate, savedBooks=[] }) {
   const [rating, setRating] = useState(book.rating || 0);
   const [isFavorite, setIsFavorite] = useState(book.is_favorite || false);
-  const isSaved = savedBooks?.some(b => b.title === book.title);
-
+  
   const coverUrl = book.cover_id 
     ? `https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`
     : "https://via.placeholder.com/150x200?text=No+Cover";
@@ -17,7 +16,8 @@ export default function BookCard({ book, remote, onSave, onLike, onToggleFavorit
   };
 
   const handleToggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+    const newFavoriteState = !isFavorite;
+    setIsFavorite(newFavoriteState);
     if (onToggleFavorite && book.id) {
       onToggleFavorite(book.id);
     }
@@ -31,6 +31,9 @@ export default function BookCard({ book, remote, onSave, onLike, onToggleFavorit
             className="h-48 w-full object-cover md:w-48" 
             src={coverUrl} 
             alt={book.title}
+            onError={(e) => {
+              e.target.src = "https://via.placeholder.com/150x200?text=No+Cover";
+            }}
           />
         </div>
         <div className="p-6 flex-1">
@@ -58,7 +61,7 @@ export default function BookCard({ book, remote, onSave, onLike, onToggleFavorit
             <div className="mt-4 flex items-center space-x-4">
               <div className="flex items-center">
                 <button
-                  onClick={() => onLike(book.id)}
+                  onClick={() => onLike && onLike(book.id)}
                   className="flex items-center text-gray-600 hover:text-blue-600"
                 >
                   <svg className="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -94,18 +97,21 @@ export default function BookCard({ book, remote, onSave, onLike, onToggleFavorit
           )}
 
           <div className="mt-6 flex space-x-3">
-            {remote && !isSaved && (
+            {remote && (
               <button
-                onClick={() => onSave(book)}
+                onClick={() => onSave && onSave(book)}
                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
               >
                 Add to Library
               </button>
             )}
             {!remote && (
-              <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+              <a
+                href={`/borrow?book=${book.id}`}
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition inline-block"
+              >
                 Borrow
-              </button>
+              </a>
             )}
           </div>
         </div>

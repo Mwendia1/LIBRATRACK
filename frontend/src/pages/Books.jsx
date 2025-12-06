@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import BookList from "../components/BookList";
 import AddBook from "../components/AddBook";
 
-const OPENLIB_BASE = "https://openlibrary.org/search.json?q=";
-const BACKEND = "http://localhost:8000/api";  // CHANGED
+const BACKEND = "http://localhost:8000";
 
 function Books() {
   const [query, setQuery] = useState("");
   const [remoteBooks, setRemoteBooks] = useState([]);
   const [savedBooks, setSavedBooks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   useEffect(() => {
     fetchSaved();
@@ -17,7 +17,7 @@ function Books() {
 
   const fetchSaved = () => {
     setLoading(true);
-    fetch(`${BACKEND}/books`)
+    fetch(`${BACKEND}/api/books`)
       .then(r => {
         if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
         return r.json();
@@ -29,7 +29,6 @@ function Books() {
       .catch(error => {
         console.error("Error fetching books:", error);
         setLoading(false);
-        alert("Failed to fetch books. Make sure backend is running on http://localhost:8000");
       });
   };
 
@@ -38,24 +37,24 @@ function Books() {
       setRemoteBooks([]);
       return;
     }
-    setLoading(true);
-    fetch(`${OPENLIB_BASE}${encodeURIComponent(q)}`)
+    setSearchLoading(true);
+    fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&limit=10`)
       .then(r => r.json())
       .then(data => {
         const docs = data.docs || [];
-        const mapped = docs.slice(0, 10).map(d => ({
-          key: d.key || d.cover_edition_key || d.seed?.[0] || Math.random().toString(36).slice(2),
-          title: d.title,
-          author: d.author_name ? d.author_name[0] : "Unknown",
+        const mapped = docs.map((d, index) => ({
+          key: d.key || `book-${index}`,
+          title: d.title || "Unknown Title",
+          author: d.author_name ? d.author_name[0] : "Unknown Author",
           published_year: d.first_publish_year || null,
           cover_id: d.cover_i || null,
         }));
         setRemoteBooks(mapped);
-        setLoading(false);
+        setSearchLoading(false);
       })
       .catch(error => {
         console.error("Error searching OpenLibrary:", error);
-        setLoading(false);
+        setSearchLoading(false);
       });
   };
 
@@ -67,7 +66,8 @@ function Books() {
       cover_id: book.cover_id,
       copies: 1
     };
-    fetch(`${BACKEND}/books`, {
+    
+    fetch(`${BACKEND}/api/books`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
@@ -87,19 +87,19 @@ function Books() {
   };
 
   const handleLike = (id) => {
-    fetch(`${BACKEND}/books/${id}/like`, { method: "PATCH" })
+    fetch(`${BACKEND}/api/books/${id}/like`, { method: "PATCH" })
       .then(fetchSaved)
       .catch(console.error);
   };
 
   const handleToggleFavorite = (id) => {
-    fetch(`${BACKEND}/books/${id}/favorite`, { method: "PATCH" })
+    fetch(`${BACKEND}/api/books/${id}/favorite`, { method: "PATCH" })
       .then(fetchSaved)
       .catch(console.error);
   };
 
   const handleRate = (id, value) => {
-    fetch(`${BACKEND}/books/${id}/rate/${value}`, { method: "PATCH" })
+    fetch(`${BACKEND}/api/books/${id}/rate/${value}`, { method: "PATCH" })
       .then(fetchSaved)
       .catch(console.error);
   };
@@ -113,7 +113,6 @@ function Books() {
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-3xl font-bold text-gray-800 mb-6">Books Management</h2>
 
-      {/* Search Section */}
       <div className="bg-white rounded-lg shadow p-6 mb-8">
         <h3 className="text-xl font-semibold mb-4">Search OpenLibrary</h3>
         <form onSubmit={handleSearch} className="flex gap-3 mb-4">
@@ -127,13 +126,17 @@ function Books() {
           <button
             type="submit"
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            disabled={loading}
+            disabled={searchLoading}
           >
-            {loading ? "Searching..." : "Search"}
+            {searchLoading ? "Searching..." : "Search"}
           </button>
         </form>
 
-        {remoteBooks.length > 0 && (
+        {searchLoading ? (
+          <div className="text-center py-4">
+            <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+          </div>
+        ) : remoteBooks.length > 0 ? (
           <div>
             <h4 className="text-lg font-medium mb-3">Search Results</h4>
             <BookList
@@ -143,10 +146,11 @@ function Books() {
               savedBooks={savedBooks}
             />
           </div>
+        ) : query && (
+          <p className="text-gray-500 text-center py-4">No books found. Try a different search term.</p>
         )}
       </div>
 
-      {/* Library Section */}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-semibold">Your Library</h3>

@@ -1,12 +1,7 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, EmailStr
 from typing import Optional
 from datetime import datetime
-import re
 
-# Email validation pattern
-EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-
-# Book schemas
 class BookBase(BaseModel):
     title: str
     author: str
@@ -25,7 +20,7 @@ class BookUpdate(BaseModel):
     copies: Optional[int] = None
     is_favorite: Optional[bool] = None
 
-class Book(BookBase):
+class BookResponse(BookBase):
     id: int
     available_copies: int
     likes: int
@@ -36,42 +31,23 @@ class Book(BookBase):
     class Config:
         from_attributes = True
 
-# Member schemas with custom email validation
 class MemberBase(BaseModel):
     name: str
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
     phone: Optional[str] = None
     address: Optional[str] = None
-    
-    @field_validator('email')
-    @classmethod
-    def validate_email(cls, v):
-        if v is None or v == "":
-            return v
-        if not EMAIL_REGEX.match(v):
-            raise ValueError('Invalid email format')
-        return v
 
 class MemberCreate(MemberBase):
     pass
 
 class MemberUpdate(BaseModel):
     name: Optional[str] = None
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
     phone: Optional[str] = None
     address: Optional[str] = None
     is_active: Optional[bool] = None
-    
-    @field_validator('email')
-    @classmethod
-    def validate_email(cls, v):
-        if v is None or v == "":
-            return v
-        if not EMAIL_REGEX.match(v):
-            raise ValueError('Invalid email format')
-        return v
 
-class Member(MemberBase):
+class MemberResponse(MemberBase):
     id: int
     join_date: datetime
     is_active: bool
@@ -79,7 +55,6 @@ class Member(MemberBase):
     class Config:
         from_attributes = True
 
-# Borrow schemas
 class BorrowBase(BaseModel):
     book_id: int
     member_id: int
@@ -87,10 +62,7 @@ class BorrowBase(BaseModel):
 class BorrowCreate(BorrowBase):
     pass
 
-class BorrowReturn(BaseModel):
-    returned: bool = True
-
-class Borrow(BorrowBase):
+class BorrowResponse(BorrowBase):
     id: int
     borrow_date: datetime
     return_date: Optional[datetime]
@@ -100,11 +72,10 @@ class Borrow(BorrowBase):
     class Config:
         from_attributes = True
 
-class BorrowWithDetails(Borrow):
-    book: Book
-    member: Member
+class BorrowWithDetails(BorrowResponse):
+    book: BookResponse
+    member: MemberResponse
 
-# Dashboard stats
 class DashboardStats(BaseModel):
     total_books: int
     total_members: int
