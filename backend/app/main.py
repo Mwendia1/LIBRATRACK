@@ -11,20 +11,13 @@ app = FastAPI(
 )
 
 # ========== CORS CONFIGURATION ==========
-# Allow your Vercel frontend and local development
-origins = [
-    "https://libratrack-teal.vercel.app",  # Your Vercel URL
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://libratrack-kotz.onrender.com",  # Your backend URL (for testing)
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # Allow all for now
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allow_methods=["*"],  # Use "*" instead of listing methods
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # ========== CREATE TABLES ==========
