@@ -90,7 +90,7 @@ export default function MemberCard({ member }) {
           </div>
         </div>
 
-        {/* Borrowing Info */}
+       
         <div className="mt-6 pt-6 border-t border-gray-200">
           <div className="flex justify-between items-center mb-4">
             <div>
@@ -127,7 +127,7 @@ export default function MemberCard({ member }) {
             </button>
           </div>
 
-          {/* Borrows Details */}
+      
           {showBorrows && (
             <div className="mt-4">
               {loadingBorrows ? (
@@ -171,7 +171,7 @@ export default function MemberCard({ member }) {
             </div>
           )}
 
-          {/* Action Buttons */}
+      
           <div className="flex gap-3 mt-4">
             <a
               href={`/borrow?member=${member.id}`}

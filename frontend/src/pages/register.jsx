@@ -19,7 +19,7 @@ export default function Register() {
       ...prev,
       [name]: value
     }));
-    // Clear error for this field when user starts typing
+   
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -72,7 +72,7 @@ export default function Register() {
       
       alert(`Member "${result.name}" registered successfully!`);
       
-      // Reset form
+     
       setFormData({
         name: "",
         email: "",
@@ -81,7 +81,7 @@ export default function Register() {
       });
       setErrors({});
       
-      // Optionally navigate to members page
+ 
       navigate("/members");
       
     } catch (error) {
@@ -102,10 +102,10 @@ export default function Register() {
             <p className="text-gray-600 mt-2">Add a new member to your library system</p>
           </div>
 
-          {/* Form Card */}
+  
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name Field */}
+          
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                   Full Name *
@@ -132,7 +132,7 @@ export default function Register() {
                 )}
               </div>
 
-              {/* Email Field */}
+            
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                   Email Address
@@ -159,7 +159,7 @@ export default function Register() {
                 <p className="mt-1 text-sm text-gray-500">Optional, but recommended for notifications</p>
               </div>
 
-              {/* Phone Field */}
+            
               <div>
                 <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
                   Phone Number
@@ -185,7 +185,7 @@ export default function Register() {
                 )}
               </div>
 
-              {/* Address Field */}
+       
               <div>
                 <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
                   Address
@@ -209,7 +209,7 @@ export default function Register() {
                 </div>
               </div>
 
-              {/* Form Actions */}
+            
               <div className="pt-6 border-t border-gray-200">
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
@@ -247,7 +247,7 @@ export default function Register() {
               </div>
             </form>
 
-            {/* Additional Info */}
+          
             <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
               <div className="flex items-start">
                 <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -262,7 +262,7 @@ export default function Register() {
             </div>
           </div>
 
-          {/* Quick Stats */}
+        
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-white rounded-lg shadow p-4">
               <h3 className="text-sm font-medium text-gray-700 mb-2">Why Register Members?</h3>

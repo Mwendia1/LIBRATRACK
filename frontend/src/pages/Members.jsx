@@ -31,11 +31,11 @@ export default function Members() {
   };
 
   const filteredMembers = members.filter(member => {
-    // Filter by search term
+    
     const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (member.email && member.email.toLowerCase().includes(searchTerm.toLowerCase()));
     
-    // Filter by active status
+  
     if (activeFilter === "active") {
       return matchesSearch && member.is_active;
     } else if (activeFilter === "inactive") {
@@ -61,7 +61,7 @@ export default function Members() {
 
       if (!response.ok) throw new Error("Failed to update member");
 
-      fetchMembers(); // Refresh the list
+      fetchMembers(); 
     } catch (error) {
       console.error("Error updating member:", error);
       alert("Failed to update member status");
@@ -75,7 +75,7 @@ export default function Members() {
         <p className="text-gray-600 mt-2">Manage all library members and their borrowing history</p>
       </div>
 
-      {/* Stats Cards */}
+    
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-xl shadow p-6">
           <div className="flex items-center justify-between">
@@ -120,7 +120,7 @@ export default function Members() {
         </div>
       </div>
 
-      {/* Search and Filter Bar */}
+     
       <div className="bg-white rounded-xl shadow p-6 mb-8">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
@@ -173,7 +173,6 @@ export default function Members() {
         </div>
       </div>
 
-      {/* Members List */}
       <div className="bg-white rounded-xl shadow overflow-hidden">
         {loading ? (
           <div className="text-center py-12">
@@ -268,7 +267,7 @@ export default function Members() {
         )}
       </div>
 
-      {/* Footer Stats */}
+    
       <div className="mt-8 text-center text-sm text-gray-500">
         Showing {filteredMembers.length} of {members.length} members
       </div>

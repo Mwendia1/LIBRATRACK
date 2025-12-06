@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { API_URL } from "../config";
 
-// Inline SVG icons (keep these the same)
 const BookOpenIcon = () => (
   <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -124,7 +123,7 @@ export default function Home() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
+    
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">LibraTrack Dashboard</h1>
         <p className="text-gray-600">Manage your library efficiently with real-time statistics and quick access</p>
@@ -137,7 +136,7 @@ export default function Home() {
         </div>
       ) : (
         <>
-          {/* Stats Grid */}
+      
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
             {statCards.map((stat, index) => {
               const Icon = stat.icon;
@@ -162,7 +161,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Quick Actions */}
+       
             <div className="lg:col-span-2">
               <div className="bg-white rounded-xl shadow-md p-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h2>
@@ -180,7 +179,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Recent Borrows */}
               <div className="bg-white rounded-xl shadow-md p-6 mt-8">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-bold text-gray-900">Recent Borrows</h2>
@@ -215,7 +213,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* System Status */}
+          
             <div>
               <div className="bg-white rounded-xl shadow-md p-6 mb-8">
                 <h2 className="text-xl font-bold text-gray-900 mb-6">System Status</h2>
@@ -235,7 +233,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Upcoming Due Dates */}
+        
               <div className="bg-white rounded-xl shadow-md p-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-6">Upcoming Due Dates</h2>
                 <div className="space-y-3">
