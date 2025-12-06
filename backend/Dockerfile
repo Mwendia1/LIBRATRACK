@@ -2,11 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies
+# Install SQLite3
 RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    libpq-dev \
+    sqlite3 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements file
@@ -18,6 +16,9 @@ RUN pip install --upgrade pip && \
 
 # Copy application code
 COPY . .
+
+# Create data directory for SQLite database
+RUN mkdir -p /app/data
 
 # Expose port
 EXPOSE 8000
