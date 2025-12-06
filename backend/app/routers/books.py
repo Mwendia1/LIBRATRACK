@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from typing import List
-from database import get_db
-from crud import get_books, create_book
-from schemas import BookCreate, BookOut
+from backend.app.database import get_db
+from backend.app.crud import get_books, create_book
+from backend.app.schemas import BookCreate, BookOut
 
 router = APIRouter(prefix="/books", tags=["books"])
 

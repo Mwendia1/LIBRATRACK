@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from typing import List
-from database import get_db
-from crud import get_members, create_member
-from schemas import MemberCreate, MemberOut
+from backend.app.database import get_db
+from backend.app.crud import get_members, create_member
+from backend.app.schemas import MemberCreate, MemberOut
 
 router = APIRouter(prefix="/members", tags=["members"])
 

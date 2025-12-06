@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Member, Book
-from schemas import MemberCreate, BookCreate
+from backend.app.models import Member, Book
+from backend.app.schemas import MemberCreate, BookCreate
 
 # Members
 def get_members(db: Session):

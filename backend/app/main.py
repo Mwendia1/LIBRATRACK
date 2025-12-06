@@ -4,9 +4,9 @@ from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 
-from database import Base, engine, get_db
-from models import Book, Member, Borrow
-from schemas import (
+from backend.app.database import Base, engine, get_db
+from backend.app.models import Book, Member, Borrow
+from backend.app.schemas import (
     BookCreate, BookOut, BookUpdate,
     MemberCreate, MemberOut, MemberUpdate,
     BorrowCreate, BorrowOut, BorrowReturn,
