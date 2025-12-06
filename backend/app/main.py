@@ -1,10 +1,8 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from app.routers import books, members, borrow, dashboard
 from app.database import Base, engine
 from app import models
-import os
 
 app = FastAPI(
     title="Library Management System API",
@@ -13,20 +11,19 @@ app = FastAPI(
 )
 
 # ========== CORS CONFIGURATION ==========
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+# Allow your Vercel frontend and local development
 origins = [
-    "https://libratrack-teal.vercel.app/"
+    "https://libratrack-teal.vercel.app",  # Your Vercel URL
     "http://localhost:5173",
     "http://localhost:3000",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:3000",
+    "https://libratrack-kotz.onrender.com",  # Your backend URL (for testing)
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -50,16 +47,8 @@ def read_root():
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy"}
+    return {"status": "healthy", "database": "connected"}
 
 @app.get("/api/test")
 def test_endpoint():
     return {"message": "API test endpoint is working!"}
-
-# ========== ERROR HANDLING ==========
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    return JSONResponse(
-        status_code=500,
-        content={"detail": f"Internal server error: {str(exc)}"}
-    )
