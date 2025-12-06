@@ -3,7 +3,7 @@ import BookList from "../components/BookList";
 import AddBook from "../components/AddBook";
 
 const OPENLIB_BASE = "https://openlibrary.org/search.json?q=";
-const BACKEND = "http://127.0.0.1:8000/api";
+const BACKEND = "http://localhost:8000/api";  // CHANGED
 
 function Books() {
   const [query, setQuery] = useState("");
@@ -18,13 +18,19 @@ function Books() {
   const fetchSaved = () => {
     setLoading(true);
     fetch(`${BACKEND}/books`)
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+        return r.json();
+      })
       .then(data => {
         setSavedBooks(data);
         setLoading(false);
       })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+      .catch(error => {
+        console.error("Error fetching books:", error);
+        setLoading(false);
+        alert("Failed to fetch books. Make sure backend is running on http://localhost:8000");
+      });
   };
 
   const searchOpenLibrary = (q) => {
@@ -47,8 +53,10 @@ function Books() {
         setRemoteBooks(mapped);
         setLoading(false);
       })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+      .catch(error => {
+        console.error("Error searching OpenLibrary:", error);
+        setLoading(false);
+      });
   };
 
   const saveBook = (book) => {
@@ -64,12 +72,18 @@ function Books() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     })
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+        return r.json();
+      })
       .then(() => {
         fetchSaved();
         alert("Book added to library!");
       })
-      .catch(console.error);
+      .catch(error => {
+        console.error("Error saving book:", error);
+        alert("Failed to save book");
+      });
   };
 
   const handleLike = (id) => {

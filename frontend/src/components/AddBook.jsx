@@ -1,5 +1,5 @@
 import { useState } from "react";
-const BACKEND = "http://127.0.0.1:8000";
+const BACKEND = "http://localhost:8000/api";  // CHANGED
 
 export default function AddBook({ onAdded }) {
   const [title, setTitle] = useState("");
@@ -29,11 +29,32 @@ export default function AddBook({ onAdded }) {
   }
 
   return (
-    <form onSubmit={submit} style={{ marginBottom: 12 }}>
-      <input placeholder="Title" value={title} onChange={e=>setTitle(e.target.value)} required />
-      <input placeholder="Author" value={author} onChange={e=>setAuthor(e.target.value)} />
-      <input placeholder="Year" value={year} onChange={e=>setYear(e.target.value)} />
-      <button type="submit">Add Book</button>
+    <form onSubmit={submit} className="flex gap-2 mb-6">
+      <input 
+        className="flex-1 px-3 py-2 border border-gray-300 rounded"
+        placeholder="Title" 
+        value={title} 
+        onChange={e=>setTitle(e.target.value)} 
+        required 
+      />
+      <input 
+        className="flex-1 px-3 py-2 border border-gray-300 rounded"
+        placeholder="Author" 
+        value={author} 
+        onChange={e=>setAuthor(e.target.value)} 
+      />
+      <input 
+        className="w-24 px-3 py-2 border border-gray-300 rounded"
+        placeholder="Year" 
+        value={year} 
+        onChange={e=>setYear(e.target.value)} 
+      />
+      <button 
+        type="submit"
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Add Book
+      </button>
     </form>
   );
 }

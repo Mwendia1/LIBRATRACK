@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const BACKEND = "http://127.0.0.1:8000/api";
+const BACKEND = "http://localhost:8000/api";  // CHANGED
 
 export default function MemberCard({ member }) {
   const [borrows, setBorrows] = useState([]);

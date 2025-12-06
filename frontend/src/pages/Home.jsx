@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const BACKEND = "http://127.0.0.1:8000/api";
+const BACKEND = "http://localhost:8000/api";  // CHANGED
 
 // Inline SVG icons
 const BookOpenIcon = () => (
@@ -61,6 +61,10 @@ export default function Home() {
         fetch(`${BACKEND}/dashboard/stats`),
         fetch(`${BACKEND}/borrow?returned=false&limit=5`)
       ]);
+
+      if (!statsRes.ok || !borrowsRes.ok) {
+        throw new Error("Failed to fetch dashboard data");
+      }
 
       const statsData = await statsRes.json();
       const borrowsData = await borrowsRes.json();

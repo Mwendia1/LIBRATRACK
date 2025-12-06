@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-const BACKEND = "http://127.0.0.1:8000/api";
+const BACKEND = "http://localhost:8000/api";  // CHANGED
 
 export default function Borrow() {
   const location = useLocation();
@@ -26,19 +26,31 @@ export default function Borrow() {
 
   const fetchMembers = () => {
     fetch(`${BACKEND}/members`)
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+        return r.json();
+      })
       .then(setMembers)
-      .catch(console.error);
+      .catch(error => {
+        console.error("Error fetching members:", error);
+        alert("Failed to fetch members. Make sure backend is running.");
+      });
   };
 
   const fetchAvailableBooks = () => {
-    fetch(`${BACKEND}/books?search=`)
-      .then(r => r.json())
+    fetch(`${BACKEND}/books`)
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+        return r.json();
+      })
       .then(data => {
         const availableBooks = data.filter(book => book.available_copies > 0);
         setBooks(availableBooks);
       })
-      .catch(console.error);
+      .catch(error => {
+        console.error("Error fetching books:", error);
+        alert("Failed to fetch books.");
+      });
   };
 
   const handleBorrow = async (e) => {

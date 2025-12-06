@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import MemberCard from "../components/MemberCard";
 
-const BACKEND = "http://127.0.0.1:8000/api";
+const BACKEND = "http://localhost:8000/api";  // CHANGED
 
 export default function Members() {
   const [members, setMembers] = useState([]);
@@ -16,7 +16,10 @@ export default function Members() {
   const fetchMembers = () => {
     setLoading(true);
     fetch(`${BACKEND}/members`)
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+        return r.json();
+      })
       .then(data => {
         setMembers(data);
         setLoading(false);
@@ -24,6 +27,7 @@ export default function Members() {
       .catch(error => {
         console.error("Error fetching members:", error);
         setLoading(false);
+        alert("Failed to fetch members. Make sure backend is running on http://localhost:8000");
       });
   };
 
