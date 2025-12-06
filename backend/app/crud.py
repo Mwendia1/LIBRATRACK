@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 from . import models, schemas
 
-# Book CRUD operations
+
 def get_books(db: Session, skip: int = 0, limit: int = 100, search: Optional[str] = None):
     query = db.query(models.Book)
     if search:
@@ -75,7 +75,7 @@ def toggle_favorite(db: Session, book_id: int):
     db.refresh(db_book)
     return db_book
 
-# Member CRUD operations
+
 def get_members(db: Session, skip: int = 0, limit: int = 100, search: Optional[str] = None):
     query = db.query(models.Member)
     if search:
@@ -116,7 +116,7 @@ def update_member(db: Session, member_id: int, member_update: schemas.MemberUpda
     db.refresh(db_member)
     return db_member
 
-# Borrow CRUD operations
+
 def get_borrows(db: Session, skip: int = 0, limit: int = 100, returned: bool = None):
     query = db.query(models.Borrow)
     if returned is not None:
@@ -164,7 +164,7 @@ def return_book(db: Session, borrow_id: int):
     db.refresh(db_borrow)
     return db_borrow
 
-# Dashboard operations
+
 def get_dashboard_stats(db: Session):
     total_books = db.query(models.Book).count()
     total_members = db.query(models.Member).count()

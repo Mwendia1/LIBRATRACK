@@ -6,16 +6,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Get DATABASE_URL from environment, or use SQLite
+
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
-    # Fix for PostgreSQL on Render
+
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
     SQLALCHEMY_DATABASE_URL = DATABASE_URL
     connect_args = {}
 else:
-    # Use SQLite with absolute path for Docker
+   
     SQLALCHEMY_DATABASE_URL = "sqlite:////app/data/libratrack.db"
     connect_args = {"check_same_thread": False}
 
